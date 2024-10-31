@@ -108,7 +108,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
 
   final ImagePicker _picker = ImagePicker(); // Image picker instance
 
-  // Liveness and facial recognition variables
+  // Live ness and facial recognition variables
   String license = '';
   final _trustdeviceProPlugin = TrustdeviceProPlugin();
   Map<String, dynamic> facialRecognition = {};
@@ -123,7 +123,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   @override
   void initState() {
     super.initState();
-    getLicense(); // Initialize license for liveness check
+    getLicense(); // Initialize license for live ness check
   }
 
   Future<void> _initWithOptions() async {
@@ -188,6 +188,12 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
           successFinishRegistration = true;
           faceCompareLoading = false;
         });
+        // Show success dialog
+        showSuccessDialog(
+          context,
+          'Successful',
+          'Your ID has been verified successfully.',
+        );
       } else {
         setState(() {
           faceCompareError = true;
@@ -344,6 +350,56 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
         height: (image.height * targetWidth ~/ image.width));
 
     return Uint8List.fromList(img.encodeJpg(resizedImage));
+  }
+
+  //display success dialog
+  void showSuccessDialog(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          title: Row(
+            children: [
+              const Icon(
+                Icons.check_circle_outline,
+                color: Colors.green,
+                size: 30,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.green,
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            message,
+            style: const TextStyle(
+              color: Colors.black87,
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: const Text(
+                "OK",
+                style: TextStyle(
+                  color: Colors.green,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                // Navigate to the next step or close the screen if needed
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   // Helper method to display error dialog
